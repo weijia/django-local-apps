@@ -1,3 +1,5 @@
+from UserDict import UserDict
+
 from django_local_apps.server_configurations import get_ufs_web_server_port, get_admin_username, get_admin_password
 from iconizer.gui_client.browser_service_client import BrowserServiceClass
 from iconizer.iconizer_consts import ICONIZER_SERVICE_NAME
@@ -31,9 +33,8 @@ class DropTagger(MsgProcessCommandBase):
 
     def register_to_service(self):
         channel = self.get_channel("drop_target_channel")
-        self.ufs_msg_service.send_to(
-            ICONIZER_SERVICE_NAME,
-            {"command": "DropWndV2", "tip": "Drop test", "target": channel.get_channel_full_name()})
+        reg_msg = UserDict({"command": "DropWndV2", "tip": "Tagging", "target": channel.get_channel_full_name()})
+        self.ufs_msg_service.send_to(ICONIZER_SERVICE_NAME, reg_msg.data)
         return channel
 
 
