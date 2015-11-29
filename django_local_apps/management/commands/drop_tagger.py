@@ -23,14 +23,15 @@ class DropTagger(MsgProcessCommandBase):
             if "urls" in msg:
                 links = ""
                 for i in msg["urls"]:
-                    full_path = get_full_path_from_url(i)
-                    ufs_url = get_ufs_url_for_local_path(full_path)
-                    links += "url=" + quote_unicode(unicode(ufs_url)) + "&"
+                    # full_path = get_full_path_from_url(i)
+                    # ufs_url = get_ufs_url_for_local_path(full_path)
+                    qt_url = i
+                    links += "url=" + quote_unicode(unicode(qt_url)) + "&"
                 c = ObjSysClint()
                 c.password = get_admin_password()
                 c.server_port = str(get_ufs_web_server_port())
                 c.username = get_admin_username()
-                tagging_url = c.get_manual_tagging_url(links)
+                tagging_url = c.get_manual_tagging_url_for_qt_urls(links)
                 # print tagging_url
                 BrowserServiceClass().open_browser(tagging_url)
 
