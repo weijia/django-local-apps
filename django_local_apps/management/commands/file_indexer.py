@@ -46,6 +46,7 @@ class NoMsgHandler(MsgProcessCommandBase):
     def do_first_index_for_obj_list(self, ufs_obj_filter):
         for obj in ufs_obj_filter:
             full_path = obj.full_path
+            print u"processing: " + unicode(full_path)
             if not (full_path is None) and (os.path.isdir(full_path)):
                 for filename in os.listdir(full_path):
                     child_full_path = os.path.join(full_path, filename)
