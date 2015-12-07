@@ -25,8 +25,6 @@ class NoMsgHandler(MsgProcessCommandBase):
         # super(NoMsgHandler, self).msg_loop()
         # for obj in UfsObj.objects.filter(ufs_obj_type=UfsObj.INDEXING_FILE):
         self.first_index_type, is_created = IndexType.objects.get_or_create(name=self.FILE_INDEX_FIRST_STAGE_NAME)
-        admin_username = get_admin_username()
-        self.admin_user = User.objects.get(username=admin_username)
 
     def msg_loop(self):
         self.do_first_index()
