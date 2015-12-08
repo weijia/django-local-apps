@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 from django_local_apps.models import IndexedTime, IndexType
 from django_local_apps.server_configurations import get_admin_username
+from libtool import format_path
 from obj_sys.models_ufs_obj import UfsObj
 from obj_sys.obj_tools import get_ufs_url_for_local_path
 from universal_clipboard.management.commands.cmd_handler_base.msg_process_cmd_base import MsgProcessCommandBase
@@ -42,20 +43,24 @@ class NoMsgHandler(MsgProcessCommandBase):
         # query = ufs_obj_filter.query
         while ufs_obj_filter.count() > 0:
             self.do_first_index_for_obj_list(ufs_obj_filter)
+            ufs_obj_filter = self.get_obj_for_first_indexing()
 
     def do_first_index_for_obj_list(self, ufs_obj_filter):
         for obj in ufs_obj_filter:
-            full_path = obj.full_path
-            print u"processing: " + unicode(full_path)
+            # if IndexedTime.objects.filter(ufs_obj=obj, local_index_type=self.first_index_type).exists():
+            #     raise "Nonono"
+            full_path = format_path(obj.full_path)
+            # print u"processing: " + unicode(full_path)
             if not (full_path is None) and (os.path.isdir(full_path)):
                 for filename in os.listdir(full_path):
-                    child_full_path = os.path.join(full_path, filename)
+                    child_full_path = format_path(os.path.join(full_path, filename))
+                    print unicode(child_full_path)
                     self.add_obj_from_full_path(child_full_path)
             IndexedTime.objects.get_or_create(ufs_obj=obj, local_index_type=self.first_index_type)
 
     def get_obj_for_first_indexing(self):
-        ufs_obj_filter = UfsObj.objects.exclude(indexedtime__local_index_type=self.first_index_type,
-                                                ufs_obj_type=UfsObj.TYPE_UFS_OBJ)
+        ufs_obj_filter = UfsObj.objects.filter(ufs_obj_type=UfsObj.TYPE_UFS_OBJ).\
+            exclude(indexedtime__local_index_type=self.first_index_type)
         return ufs_obj_filter
 
     def add_obj_from_full_path(self, child_full_path):
