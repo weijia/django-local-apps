@@ -53,7 +53,9 @@ class NoMsgHandler(MsgProcessCommandBase):
                 for filename in os.listdir(full_path):
                     child_full_path = format_path(os.path.join(full_path, filename))
                     print unicode(child_full_path)
-                    self.add_obj_from_full_path(child_full_path)
+                    new_obj = self.add_obj_from_full_path(child_full_path)
+                    if not os.path.isdir(child_full_path):
+                        IndexedTime.objects.get_or_create(ufs_obj=new_obj, local_index_type=self.first_index_type)
             IndexedTime.objects.get_or_create(ufs_obj=obj, local_index_type=self.first_index_type)
 
     def get_obj_for_first_indexing(self):
@@ -63,8 +65,8 @@ class NoMsgHandler(MsgProcessCommandBase):
 
     def add_obj_from_full_path(self, child_full_path):
         file_url = get_ufs_url_for_local_path(child_full_path)
-        UfsObj.objects.get_or_create(ufs_obj_type=UfsObj.TYPE_UFS_OBJ, ufs_url=file_url,
+        obj, is_created = UfsObj.objects.get_or_create(ufs_obj_type=UfsObj.TYPE_UFS_OBJ, ufs_url=file_url,
                                      full_path=child_full_path, user=self.admin_user, source=UfsObj.SOURCE_INDEXER)
-
+        return obj
 
 Command = NoMsgHandler
