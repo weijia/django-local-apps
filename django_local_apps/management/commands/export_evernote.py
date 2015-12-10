@@ -108,7 +108,7 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
                 description, is_description_created = Description.objects.get_or_create(content=description_content)
                 UfsObj.objects.get_or_create(uuid=note.guid, description_json=json.dumps({"data": description_content}),
                                              ufs_obj_type=UfsObj.TYPE_CLIPBOARD, user=self.admin_user,
-                                             ufs_url=u"clipboard://" + description_content,
+                                             ufs_url=u"clipboard://" + description_content, description=description,
                                              source=UfsObj.SOURCE_CLIPBOARD_FROM_EVERNOTE)
 
                 # return notes_lst
