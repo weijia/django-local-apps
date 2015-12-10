@@ -84,8 +84,7 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
         print "Found ", len(notebooks), " notebooks:"
         for notebook in notebooks:
             print "  * ", notebook.name
-            for note in self.list_notes(notebook.guid, user_store, note_store):
-                print note
+            self.list_notes(notebook.guid, user_store, note_store)
 
     def list_notes(self, notebook_guid, user_store, note_store):
         note_filter = NoteTypes.NoteFilter()
@@ -95,11 +94,12 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
         notes_lst = []
         for note in notes:
             # this_note = {'NoteTitle': note.title, 'NoteId': note.guid}
-            this_note = {'NoteGuid': note.guid, 'NoteContent': note.content}
+            # Ref: https://discussion.evernote.com/topic/79655-how-to-get-note-content-enml-using-python/
+            this_note = {'NoteGuid': note.guid, 'NoteContent': note_store.getNoteContent(self.auth_token, note.guid)}
+            print this_note
             notes_lst.append(this_note)
 
         return notes_lst
-
 
         # print
         # print "Creating a new note in the default notebook"
