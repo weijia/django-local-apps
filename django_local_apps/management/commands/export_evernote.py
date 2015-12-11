@@ -169,7 +169,8 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
             try:
                 return self.note_store.getNoteContent(self.auth_token, note.guid)
             except:
-                time.sleep(1000)
+                print "retrieve error for: %s, will retry" % note.guid
+                time.sleep(60*5)
 
 
 Command = ExportEvernoteCmd
