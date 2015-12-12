@@ -8,7 +8,7 @@ def get_ufs_web_server_port():
 
 
 def get_admin_username():
-    return get_local_key("admin_account.admin_user")
+    return get_local_key("admin_account.admin_username")
 
 
 def get_admin_password():
