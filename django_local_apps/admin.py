@@ -1,7 +1,11 @@
-from djangoautoconf.auto_conf_admin_utils import register_all_in_module
+from djangoautoconf.auto_conf_admin_tools.admin_register import AdminRegister
+from djangoautoconf.auto_conf_admin_tools.foreign_key_auto_complete import ForeignKeyAutoCompleteFeature
+from obj_sys.models_ufs_obj import UfsObj
 import models
 
-
-register_all_in_module(models)
-
+r = AdminRegister()
+f = ForeignKeyAutoCompleteFeature()
+f.set_search_field_by_model({UfsObj: ("uuid", "ufs_url", "full_path")})
+r.add_feature(f)
+r.register_all_models(models)
 

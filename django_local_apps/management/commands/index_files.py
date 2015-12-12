@@ -2,27 +2,15 @@ import os
 import datetime
 from django.contrib.auth.models import User
 from tzlocal import get_localzone
+
+from django_local_apps.management.commands.local_app_utils.local_app_counter import Counter
 from django_local_apps.models import IndexedTime, IndexType
 from django_local_apps.server_configurations import get_admin_username
 from libtool import format_path
 from obj_sys.models_ufs_obj import UfsObj
 from obj_sys.obj_tools import get_ufs_url_for_local_path
+from tagging.models import TaggedItem
 from universal_clipboard.management.commands.cmd_handler_base.msg_process_cmd_base import MsgProcessCommandBase
-
-
-class Counter(object):
-    def __init__(self, total_number, interval=100, name="Counter"):
-        super(Counter, self).__init__()
-        self.total_number = total_number
-        self.processed_child = 1
-        self.interval = interval
-        self.name = name
-        print "%s total: %d" % (self.name, self.total_number)
-
-    def increase(self):
-        self.processed_child += 1
-        if self.processed_child % self.interval == 0:
-            print "%s processed: %d/%d" % (self.name, self.processed_child, self.total_number)
 
 
 class NoMsgHandler(MsgProcessCommandBase):
@@ -40,6 +28,7 @@ class NoMsgHandler(MsgProcessCommandBase):
         super(NoMsgHandler, self).__init__()
         # super(NoMsgHandler, self).msg_loop()
         # for obj in UfsObj.objects.filter(ufs_obj_type=UfsObj.INDEXING_FILE):
+        self.ignore_list = [".git", ".kuaipan", ".aptoide"]
         self.first_index_type, is_created = IndexType.objects.get_or_create(name=self.FILE_INDEX_FIRST_STAGE_NAME)
 
     def msg_loop(self):
@@ -99,8 +88,13 @@ class NoMsgHandler(MsgProcessCommandBase):
         IndexedTime.objects.get_or_create(ufs_obj=new_obj, local_index_type=self.first_index_type)
 
     def get_obj_for_first_indexing(self):
-        ufs_obj_filter = UfsObj.objects.filter(ufs_obj_type=UfsObj.TYPE_UFS_OBJ, is_container=True). \
-            exclude(indexedtime__local_index_type=self.first_index_type)
+        # ufs_obj_filter = UfsObj.objects.filter(ufs_obj_type=UfsObj.TYPE_UFS_OBJ, is_container=True). \
+        #     exclude(indexedtime__local_index_type=self.first_index_type)
+
+        ufs_obj_filter = TaggedItem.objects.get_by_model(
+            UfsObj.objects.filter(
+                ufs_obj_type=UfsObj.TYPE_UFS_OBJ,
+                is_container=True).exclude(indexedtime__local_index_type=self.first_index_type), "index")
         return ufs_obj_filter
 
     def add_obj_from_full_path(self, child_full_path, parent_obj):
@@ -139,10 +133,13 @@ class NoMsgHandler(MsgProcessCommandBase):
 
     # noinspection PyMethodMayBeStatic
     def is_ignore_container(self, obj):
+        is_ignored = False
+        for ignore in self.ignore_list:
+            if ignore in obj.full_path:
+                is_ignored = True
         if "git" in obj.tags:
-            return True
-        else:
-            return False
+            is_ignored = True
+        return is_ignored
 
 
 Command = NoMsgHandler

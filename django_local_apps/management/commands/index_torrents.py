@@ -3,6 +3,7 @@ import os
 from django.contrib.auth.models import User
 from torrentool.torrent import Torrent
 
+from django_local_apps.management.commands.local_app_utils.local_app_counter import Counter
 from django_local_apps.models import IndexedTime, IndexType
 from django_local_apps.server_configurations import get_admin_username
 from libtool import format_path
@@ -25,20 +26,22 @@ class NoMsgHandler(MsgProcessCommandBase):
     def get_obj_filter(self):
         ufs_obj_filter = UfsObj.objects.filter(ufs_obj_type=UfsObj.TYPE_UFS_OBJ, full_path__icontains=".torrent"). \
             exclude(indexedtime__local_index_type=self.process_id)
+        self.counter = Counter(ufs_obj_filter.count(), 10, name="Object processing")
         return ufs_obj_filter
 
     def process_obj(self, obj):
         full_path = format_path(obj.full_path)
         if not (full_path is None):
             self.process_file(full_path, obj)
+        self.counter.increase()
 
     def set_complete(self, obj):
         IndexedTime.objects.get_or_create(ufs_obj=obj, local_index_type=self.process_id)
 
     def process_file(self, full_path, obj):
-        torrent = Torrent.from_file(full_path)
-        for torrent_file in torrent.files:
-            if True:  # try:
+        try:
+            torrent = Torrent.from_file(full_path)
+            for torrent_file in torrent.files:
                 name = torrent_file[0]
                 size = torrent_file[1]
                 # file_storage_hash = file.storage_hash
@@ -54,7 +57,7 @@ class NoMsgHandler(MsgProcessCommandBase):
                     parent=obj, user=self.admin_user,
                     source=UfsObj.SOURCE_INDEXER)
                 self.set_complete(obj)
-            else:  # except:
-                pass
+        except:
+            pass
 
 Command = NoMsgHandler
