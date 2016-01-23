@@ -4,6 +4,8 @@ import os
 
 import time
 from django.contrib.auth.models import User
+from social.utils import is_url
+
 from django_local_apps.models import IndexedTime, IndexType
 from django_local_apps.server_configurations import get_admin_username
 from djangoautoconf.local_key_manager import get_local_key
@@ -44,12 +46,13 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
     """
     def __init__(self):
         super(ExportEvernoteCmd, self).__init__()
+
+    def init_evernote(self):
         self.auth_token = get_local_key("evernote_key.auth_token", "django_local_apps")
         # Real applications authenticate with Evernote using OAuth, but for the
         # purpose of exploring the API, you can get a developer token that allows
         # you to access your own Evernote account. To get a developer token, visit
         # https://sandbox.evernote.com/api/DeveloperToken.action
-
         if self.auth_token == "your developer token":
             print "Please fill in your developer token"
             print "To get a developer token, visit " \
@@ -71,10 +74,10 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
         print ""
         if not version_ok:
             exit(1)
-
         self.note_store = client.get_note_store()
 
     def msg_loop(self):
+        self.init_evernote()
         notebooks = self.note_store.listNotebooks()
         print "Found ", len(notebooks), " notebooks:"
         for notebook in notebooks:
@@ -103,10 +106,14 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
                 description_content = note_content.text
                 print description_content
                 description, is_description_created = Description.objects.get_or_create(content=description_content)
+                if is_url(description_content):
+                    ufs_url = description_content
+                else:
+                    ufs_url = u"clipboard://" + description_content
                 evernote_obj, is_created = UfsObj.objects.get_or_create(
                     uuid=note.guid, description_json=json.dumps({"data": description_content}),
                     ufs_obj_type=UfsObj.TYPE_CLIPBOARD, user=self.admin_user,
-                    ufs_url=u"clipboard://" + description_content,
+                    ufs_url=ufs_url,
                     source=UfsObj.SOURCE_CLIPBOARD_FROM_EVERNOTE)
                 evernote_obj.descriptions.add(description)
                 evernote_obj.save()

@@ -5,3 +5,4 @@ pysftp
 sleekxmpp
 torrentool
 tzlocal
+evernote

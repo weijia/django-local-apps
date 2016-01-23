@@ -85,6 +85,14 @@ class UfsLocalObjSaver(UfsObjSaverBase):
     def update_from_local_path(self):
         self.get_filter().update(last_modified=self.last_modified)
 
+    @staticmethod
+    def get_full_path_from_qt_url(url):
+        return url.replace("file:///", "")
+
+    @staticmethod
+    def get_qt_url_from_full_path(full_path):
+        return "file:///%s" % full_path
+
 
 class UfsUrlObj(UfsObjSaverBase):
     def __init__(self, web_url, user, ufs_obj_type=UfsObj.TYPE_UFS_OBJ):
