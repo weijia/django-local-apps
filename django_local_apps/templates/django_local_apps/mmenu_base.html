@@ -1,0 +1,58 @@
+{% load static %}
+{% load mptt_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+<link href="{% static 'js/jQuery.mmenu-master/dist/css/jquery.mmenu.css'%}" type="text/css" rel="stylesheet" />
+<link href="{% static 'js/jQuery.mmenu-master/dist/extensions/widescreen/jquery.mmenu.widescreen.css'%}"
+      type="text/css" rel="stylesheet" />
+<link href="{% static 'js/tag-it/css/jquery.tagit.css'%}" type="text/css" rel="stylesheet" />
+<script src="{% static 'admin/js/jquery-1.9.1.min.js' %}"></script>
+<script src="{% static 'admin/js/jquery-migrate-1.2.1.min.js' %}"></script>
+<link rel='stylesheet' type='text/css' href="{% static 'css/jquery-ui/smoothness/jquery-ui.css' %}" />
+<script type='text/javascript' src="{% static 'js/jquery-ui.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/tag-it/js/tag-it.js' %}"></script>
+<script src="{% static 'js/jQuery.mmenu-master/dist/js/jquery.mmenu.all.min.js'%}"></script>
+<script>
+  //$(".tag-holder").css("position", "relative");
+  $(".tag-holder").tagit();
+</script>
+</head>
+<body>
+{% block navbar %}
+<nav id="my-menu">
+  <ul>
+      {% recursetree nodes %}
+          <li>
+              <a href="{{request.base_url}}?root={{node.pk}}"
+                 title="{{ node.full_path }}">
+                {{ node.get_ufs_obj_basename }}
+              </a>
+                <!--<span class="tag-holder">-->
+                  <!--<ul>-->
+                  <!--{% for tag in node.tags %}-->
+                      <!--<li>{{tag.name}}</li>-->
+                  <!--{% endfor %}-->
+                  <!--</ul>-->
+                <!--</span>-->
+              {% if not node.is_leaf_node %}
+                  <ul class="children">
+                      {{ children }}
+                  </ul>
+              {% endif %}
+          </li>
+      {% endrecursetree %}
+  </ul>
+</nav>
+<script type="text/javascript">
+   $(document).ready(function() {
+      $("#my-menu").mmenu();
+
+      var API = $("#my-menu").data( "mmenu" );
+      API.open();
+
+   });
+</script>
+{% endblock %}
+</body>

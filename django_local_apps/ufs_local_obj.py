@@ -37,7 +37,8 @@ class UfsObjSaverBase(object):
     def get_or_create(self):
         obj_filter = self.get_filter()
         if obj_filter.exists():
-            return obj_filter[0], False
+            self.obj = obj_filter[0]
+            return self.obj, False
         self.create_param = ({"ufs_url": self.ufs_url, "parent": self.parent, "user": self.user,
                               "full_path": self.full_path, "ufs_obj_type": self.ufs_obj_type,
                               "source": self.source})
