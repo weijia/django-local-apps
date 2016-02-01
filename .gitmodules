@@ -1,0 +1,3 @@
+[submodule "django_local_apps/static/js/jQuery.mmenu"]
+	path = django_local_apps/static/js/jQuery.mmenu
+	url = https://github.com/FrDH/jQuery.mmenu.git
