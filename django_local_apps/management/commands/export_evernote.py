@@ -100,24 +100,29 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
             if not UfsObj.objects.filter(uuid=note.guid).exists():
                 note_content_xml = self.get_note_content(note)
                 evernote_xml_content = unicode(note_content_xml)
-                root = ET.fromstring(evernote_xml_content)
+                try:
+                    root = ET.fromstring(evernote_xml_content)
+                except:
+                    evernote_xml_content = evernote_xml_content.replace("&nbsp;", " ")
+                    root = ET.fromstring(evernote_xml_content)
                 # note_content = root.findall("en-note")
                 note_content = root
                 description_content = note_content.text
                 print description_content
-                description, is_description_created = Description.objects.get_or_create(content=description_content)
-                if is_url(description_content):
-                    ufs_url = description_content
-                else:
-                    ufs_url = u"clipboard://" + description_content
-                evernote_obj, is_created = UfsObj.objects.get_or_create(
-                    uuid=note.guid, description_json=json.dumps({"data": description_content}),
-                    ufs_obj_type=UfsObj.TYPE_CLIPBOARD, user=self.admin_user,
-                    ufs_url=ufs_url,
-                    source=UfsObj.SOURCE_CLIPBOARD_FROM_EVERNOTE)
-                evernote_obj.descriptions.add(description)
-                evernote_obj.save()
-                # return notes_lst
+                if not (description_content is None):
+                    description, is_description_created = Description.objects.get_or_create(content=description_content)
+                    if is_url(description_content):
+                        ufs_url = description_content
+                    else:
+                        ufs_url = u"clipboard://" + description_content
+                    evernote_obj, is_created = UfsObj.objects.get_or_create(
+                        uuid=note.guid, description_json=json.dumps({"data": description_content}),
+                        ufs_obj_type=UfsObj.TYPE_CLIPBOARD, user=self.admin_user,
+                        ufs_url=ufs_url,
+                        source=UfsObj.SOURCE_CLIPBOARD_FROM_EVERNOTE)
+                    evernote_obj.descriptions.add(description)
+                    evernote_obj.save()
+                    # return notes_lst
 
             # print
             # print "Creating a new note in the default notebook"
