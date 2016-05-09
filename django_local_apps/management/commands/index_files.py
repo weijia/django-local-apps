@@ -6,7 +6,7 @@ from tzlocal import get_localzone
 from django_local_apps.management.commands.local_app_utils.local_app_counter import Counter
 from django_local_apps.models import IndexedTime, IndexType
 from django_local_apps.server_configurations import get_admin_username
-from libtool import format_path
+from ufs_tools import format_path
 from obj_sys.models_ufs_obj import UfsObj
 from obj_sys.obj_tools import get_ufs_url_for_local_path
 from tagging.models import TaggedItem

@@ -9,7 +9,7 @@ from social.utils import is_url
 from django_local_apps.models import IndexedTime, IndexType
 from django_local_apps.server_configurations import get_admin_username
 from djangoautoconf.local_key_manager import get_local_key
-from libtool import format_path
+from ufs_tools import format_path
 from obj_sys.models_ufs_obj import UfsObj, Description
 from obj_sys.obj_tools import get_ufs_url_for_local_path
 from universal_clipboard.management.commands.cmd_handler_base.msg_process_cmd_base import MsgProcessCommandBase
