@@ -6,7 +6,7 @@ from torrentool.torrent import Torrent
 from django_local_apps.management.commands.local_app_utils.local_app_counter import Counter
 from django_local_apps.models import IndexedTime, IndexType
 from iconizer.msg_service.msg_service_interface.msg_service_provider_interface import InterfaceNotImplemented
-from libtool import format_path
+from ufs_tools import format_path
 from universal_clipboard.management.commands.cmd_handler_base.msg_process_cmd_base import MsgProcessCommandBase
 
 
