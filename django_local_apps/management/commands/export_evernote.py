@@ -66,6 +66,7 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
         client = EvernoteClient(token=self.auth_token,
                                 sandbox=False
                                 )
+        # Ref: https://github.com/evernote/evernote-sdk-python/issues/39
         client.service_host = 'app.yinxiang.com'
         self.user_store = client.get_user_store()
         version_ok = self.user_store.checkVersion(
