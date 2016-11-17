@@ -1,4 +1,4 @@
-django==1.4.22
+django
 # Additional requirements go here
 pyftpdlib
 pysftp
@@ -6,3 +6,5 @@ sleekxmpp
 torrentool
 tzlocal
 evernote
+netifaces
+pinax-eventlog
