@@ -63,7 +63,11 @@ class ExportEvernoteCmd(MsgProcessCommandBase):
         # service, change sandbox=False and replace your
         # developer token above with a token from
         # https://www.evernote.com/api/DeveloperToken.action
-        client = EvernoteClient(token=self.auth_token, sandbox=True)
+        client = EvernoteClient(token=self.auth_token,
+                                sandbox=False
+                                )
+        # Ref: https://github.com/evernote/evernote-sdk-python/issues/39
+        client.service_host = 'app.yinxiang.com'
         self.user_store = client.get_user_store()
         version_ok = self.user_store.checkVersion(
             "Evernote EDAMTest (Python)",
