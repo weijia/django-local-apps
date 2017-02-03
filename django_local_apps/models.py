@@ -6,6 +6,7 @@ from django_local_apps.postgres_sql_checker import wait_for_postgres_sql
 from djangoautoconf.auto_conf_signals import before_server_start, before_server_stop
 from ufs_tools.direct_opener import open_url
 from obj_sys.models_ufs_obj import UfsObj
+from models_db_auto_clean import DbCleanConfig
 
 
 class IndexType(models.Model):
