@@ -3,8 +3,6 @@ import logging
 from django.utils import timezone
 from pinax.eventlog.models import Log
 
-from admin_mailbox_handler.management.commands.nams.installation_info_monitor import InstallationInfoValidator
-from admin_mailbox_handler.management.commands.nams.nams_mailbox_monitor import NamsMailboxMonitor
 from djangoautoconf.cmd_handler_base.msg_process_cmd_base import DjangoCmdBase
 
 

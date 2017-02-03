@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from django.views.generic import TemplateView
 
 from obj_sys.models_ufs_obj import UfsObj
@@ -11,6 +11,7 @@ urlpatterns = patterns('',
                                          ufs_obj_type=UfsObj.TYPE_UFS_OBJ,
                                          default_level=1,
                                          template_name="django_local_apps/mmenu_base.html")),
+    # url(r'^search/', include('haystack.urls')),
     # url(r'^remove_thumb_for_paths/$', 'obj_sys.obj_tagging.remove_thumb_for_paths'),
     # url(r'^rm_objs_for_path/$', 'obj_sys.obj_tagging.rm_objs_for_path'),
     # url(r'^rm_obj_from_db/$', 'obj_sys.obj_tagging.rm_obj_from_db'),
