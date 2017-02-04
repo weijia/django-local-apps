@@ -21,6 +21,7 @@ class LocalCommandRunner(DjangoCmdBase):
 
     def msg_loop(self):
         print self.options["path"]
+        os.system(self.options["path"][0])
 
 
 Command = LocalCommandRunner
