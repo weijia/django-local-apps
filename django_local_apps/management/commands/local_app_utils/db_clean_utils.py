@@ -6,6 +6,8 @@ def remove_expired_record(expire_days, query_set, time_attr_name="timestamp"):
     expired_record_filter = {"%s__lt" % time_attr_name: timezone.now() - timezone.timedelta(days=expire_days)}
     q = Q(**expired_record_filter)
     final_q = query_set.filter(q)
+    if final_q.count() > 1000:
+        final_q = final_q[:999]
     # cnt = 0
     # for i in final_q:
     #     i.delete()
