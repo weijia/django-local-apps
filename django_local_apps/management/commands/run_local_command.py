@@ -3,6 +3,7 @@ import os
 
 import sys
 from optparse import make_option
+from subprocess import call
 
 from pinax.eventlog.models import Log
 
@@ -17,11 +18,16 @@ class LocalCommandRunner(DjangoCmdBase):
 
     def add_arguments(self, parser):
         # Positional arguments
+        """
+        :param: in the args it could be: /usr/local/bin/python /home/richard/codes/django-dev-server/manage.py help
+        NO need to add '"' as "/usr/local/bin/python /home/richard/codes/django-dev-server/manage.py help"
+        :return:
+        """
         parser.add_argument('path', nargs='+')
 
     def msg_loop(self):
         print self.options["path"]
-        os.system(self.options["path"][0])
+        call(self.options["path"])
 
 
 Command = LocalCommandRunner
