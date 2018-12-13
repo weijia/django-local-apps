@@ -7,11 +7,11 @@ import models
 
 r = AdminRegister()
 
-s = ForeignKeySortFeature()
-s.sort_attribute = "content_type"
-s.sort_field_of_foreign_key = "model"
-r.add_feature(s)
-r.register(models.DbCleanConfig)
+# s = ForeignKeySortFeature()
+# s.sort_attribute = "content_type"
+# s.sort_field_of_foreign_key = "model"
+# r.add_feature(s)
+# r.register(models.DbCleanConfig)
 
 
 r = AdminRegister()
