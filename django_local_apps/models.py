@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from ufs_tools.short_decorator.ignore_exception import ignore_exc
+# noinspection PyUnresolvedReferences
+from models_db_auto_clean import DbCleanConfig
+
 
 try:
     from django_local_apps.postgres_sql_checker import wait_for_postgres_sql
