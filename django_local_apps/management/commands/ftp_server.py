@@ -6,6 +6,7 @@ from pyftpdlib.servers import FTPServer
 
 __author__ = 'weijia'
 
+
 # ref: https://groups.google.com/forum/#!topic/pyftpdlib/buePrncaNT4
 class YourFS(AbstractedFS):
     def open(self, filename, mode):
