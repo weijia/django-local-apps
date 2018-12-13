@@ -15,8 +15,8 @@ class DockerExecutor(DjangoCmdBase):
         NO need to add '"' as "/usr/local/bin/python /home/richard/codes/django-dev-server/manage.py help"
         :return:
         """
-        parser.add_argument('container_id', nargs=1)
-        parser.add_argument('work_dir', nargs='?', default=None)
+        parser.add_argument('--container_id', nargs=1)
+        parser.add_argument('--work_dir', nargs='?', default=None)
         parser.add_argument('path_and_params', nargs='+')
 
     def msg_loop(self):
