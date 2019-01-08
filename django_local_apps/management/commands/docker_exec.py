@@ -21,7 +21,7 @@ class DockerExecutor(DjangoCmdBase):
 
     def msg_loop(self):
         print(self.options["path_and_params"])
-        client = docker.from_env()
+        client = docker.from_env(timeout=3600)
         container = client.containers.get(self.options["container_id"][0])
         print(container.exec_run(" ".join(self.options["path_and_params"]), workdir=self.options["work_dir"]))
 
